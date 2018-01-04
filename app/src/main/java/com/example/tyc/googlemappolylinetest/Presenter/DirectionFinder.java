@@ -52,7 +52,7 @@ public class DirectionFinder implements IDirectionFinder {
                 .subscribe(new Consumer<Integer>() {
                     @Override
                     public void accept(Integer i) throws Exception {
-                        Log.e( "execute.subscribe","Current Thread"+Thread.currentThread().getName());
+//                        Log.e( "execute.subscribe","Current Thread"+Thread.currentThread().getName());
                         fetchData();
                     }
                 });
@@ -71,12 +71,12 @@ public class DirectionFinder implements IDirectionFinder {
         call.enqueue(new Callback<JsonData>() {
             @Override
             public void onResponse(Call<JsonData> call, Response<JsonData> response) {
-                Log.e( "fetchData.onResponse","Current Thread"+Thread.currentThread().getName());
+//                Log.e( "fetchData.onResponse","Current Thread"+Thread.currentThread().getName());
 
                 jsonData = response.body();
 
                 Log.e("response.status", String.valueOf(response.body().getStatus()));
-                Log.e("routeList.isEmpty", String.valueOf(jsonData==null));
+//                Log.e("routeList.isEmpty", String.valueOf(jsonData==null));
 
 //                listener.onDirectionFinderSuccess(jsonData);
                 Flowable.just(jsonData)
@@ -86,7 +86,7 @@ public class DirectionFinder implements IDirectionFinder {
                             @SuppressLint("LongLogTag")
                             @Override
                             public void accept(JsonData jsonData) throws Exception {
-                                Log.e( "fetchData.onResponse.subscribe","Current Thread"+Thread.currentThread().getName());
+//                                Log.e( "fetchData.onResponse.subscribe","Current Thread"+Thread.currentThread().getName());
 //                                listener.onDirectionFinderSuccess(jsonData);
                                 parseJson(jsonData);
                             }
@@ -104,8 +104,8 @@ public class DirectionFinder implements IDirectionFinder {
     //解析Json，分別畫線跟標記起訖點
     @Override
     public void parseJson(JsonData jsonData){
-        Log.e( "parseJson","Current Thread"+Thread.currentThread().getName());
-//        final ArrayList points = new ArrayList();
+//        Log.e( "parseJson","Current Thread"+Thread.currentThread().getName());
+        final ArrayList points = new ArrayList();
         //標示起訖點
         Flowable.just(jsonData)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -148,46 +148,54 @@ public class DirectionFinder implements IDirectionFinder {
 //                        return Flowable.fromIterable(jsonData.getRoutes().get(0).getLegs().get(0).getSteps());
 //                    }
 //                })
-                //分次(steps數)畫出兩點之間的線
-                //在此解析polyLine.points轉成arrayList<Latlng>
-                .map(new Function<Steps, ArrayList>() {
-                    @Override
-                    public ArrayList apply(Steps steps) throws Exception {
-                        Log.e( "parseJson.map","Current Thread"+Thread.currentThread().getName());
-                        ArrayList list = (ArrayList) decodePolyline(steps.getPolyline().getPoints());
-                        return list;
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())//畫線切回UI執行緒
-                //畫線
-                .subscribe(new Consumer<ArrayList>() {
-                    @Override
-                    public void accept(ArrayList arrayList) throws Exception {
-                        Log.e( "parseJson.subscribe","Current Thread"+Thread.currentThread().getName());
-                        listener.onDirectionFinderSuccess(arrayList);
-                    }
-                });
+//                //分次(steps數)畫出兩點之間的線
+//                //在此解析polyLine.points轉成arrayList<Latlng>
+//                .map(new Function<Steps, ArrayList>() {
+//                    @Override
+//                    public ArrayList apply(Steps steps) throws Exception {
+//                        Log.e( "parseJson.map","Current Thread"+Thread.currentThread().getName());
+//                        ArrayList list = (ArrayList) decodePolyline(steps.getPolyline().getPoints());
+//                        return list;
+//                    }
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())//畫線切回UI執行緒
+//                //畫線
+//                .subscribe(new Consumer<ArrayList>() {
+//                    @Override
+//                    public void accept(ArrayList arrayList) throws Exception {
+//                        Log.e( "parseJson.subscribe","Current Thread"+Thread.currentThread().getName());
+//                        listener.onDirectionFinderSuccess(arrayList);
+//                    }
+//                });
 
         ////把所有points存成一個Arraylist後畫線
         ////***************************************************************************************************************************************************************************
                 //取得所有polyline.points
-//                .flatMap(new Function<Steps, Publisher<LatLng>>() {
-//                    @Override
-//                    public Publisher<LatLng> apply(Steps steps) throws Exception {
-//                        //把steps內的polyline.points由String亂碼轉成Latlng存進一個List後回傳
-//                        List list = decodePolyline(steps.getPolyline().getPoints());
-//                        //寄出list內的所有points
-//                        return Flowable.fromIterable(list);
-//                    }
-//                })
-//                //
-//                .subscribe(new Consumer<LatLng>() {
-//                    @Override
-//                    public void accept(LatLng latLng) throws Exception {
-//                        points.add(latLng);
-//                    }
-//                });
-//        listener.onDirectionFinderSuccess(points);
+                .flatMap(new Function<Steps, Publisher<LatLng>>() {
+                    @Override
+                    public Publisher<LatLng> apply(Steps steps) throws Exception {
+                        //把steps內的polyline.points由String亂碼轉成Latlng存進一個List後回傳
+                        List list = decodePolyline(steps.getPolyline().getPoints());
+                        //寄出list內的所有points
+                        return Flowable.fromIterable(list);
+                    }
+                })
+                //
+                .subscribe(new Consumer<LatLng>() {
+                    @Override
+                    public void accept(LatLng latLng) throws Exception {
+                        points.add(latLng);
+                    }
+                });
+        //畫線
+        Flowable.just(points)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ArrayList>() {
+                    @Override
+                    public void accept(ArrayList arrayList) throws Exception {
+                        listener.onDirectionFinderSuccess(arrayList);
+                    }
+                });
         ////***************************************************************************************************************************************************************************
     }
 

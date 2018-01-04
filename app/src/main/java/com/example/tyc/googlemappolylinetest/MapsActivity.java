@@ -132,15 +132,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onDirectionFinderStart() {
+//        Log.e( "MapsActivity.onDirectionFinderStart","Current Thread"+Thread.currentThread().getName());
         //顯示進度條
         progressDialog = ProgressDialog.show(this, "Please wait.",
                 "Finding direction..!", true);
         //刪除原本的polyLine、mark
         if (originMark != null) originMark.remove();
         if (destinationMark != null) destinationMark.remove();
-        //**********************************************************
         if (polyline != null) polyline.remove();
-        //**********************************************************
     }
 
     //畫線
@@ -148,7 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onDirectionFinderSuccess(ArrayList points) {
         PolylineOptions polylineOptions = new PolylineOptions();
-        Log.e( "MapsActivity.onDirectionFinderSuccess","Current Thread"+Thread.currentThread().getName());
+//        Log.e( "MapsActivity.onDirectionFinderSuccess","Current Thread"+Thread.currentThread().getName());
         //隱藏進度條
         progressDialog.dismiss();
 
@@ -159,15 +158,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         polylineOptions.color(Color.BLUE);
         polylineOptions.geodesic(true);
 
-        if (polylineOptions!=null){
-            polyline = mMap.addPolyline(polylineOptions);
-        } else {
-            Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
-        }
+        polyline = mMap.addPolyline(polylineOptions);
     }
     //畫起始點
     @Override
     public void markPoint(LatLng origin, LatLng destination){
+//        Log.e( "MapsActivity.markPoint","Current Thread"+Thread.currentThread().getName());
+        //移動至初始點
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin,15));
+
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(origin);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
