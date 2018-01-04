@@ -8,17 +8,23 @@ First entry origin and destination, after click button. app will mark start&amp;
     sendRequestTest: or sendRequest:
         取得起訖點 or 取得輸入的起訖點
         get start&end position or get start&end position by editText
-    directionFinder.execute:執行onDirectionFinderStart
+    directionFinder.execute:
+        執行onDirectionFinderStart
         excute onDirectionFinderStart and fetchData
-    onDirectionFinderStart:檢查是否有舊的線，有的話刪除
+    onDirectionFinderStart:
+        檢查是否有舊的線，有的話刪除
         delete old mark and polyLine
-    directionFinder.fetchData:取得JSON
+    directionFinder.fetchData:
+        取得JSON
         get Json
-    directionFinder.parseJson:解析JSON，分別取得PolyLine跟起訖點
+    directionFinder.parseJson:
+        解析JSON，分別取得PolyLine跟起訖點
         parse Json and excute
-    onDirectionFinderSuccess:畫線
+    onDirectionFinderSuccess:
+        畫線
         draw polyLine
-    markPoint:畫起訖點
+    markPoint:
+        畫起訖點
         mark start&end point
 
 ## Thread ##
