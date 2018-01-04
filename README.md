@@ -2,8 +2,8 @@
 First entry origin and destination, after click button. app will mark start&amp;end position and draw path.
 
 ## 執行流程 ##
-    onMapReady:檢查權限                                            
-        check Permission        
+    onMapReady:檢查權限 
+        check Permission
     sendRequestTest:取得起訖點 or sendRequest:取得輸入的起訖點       
         get start&end position        
     directionFinder.execute:執行onDirectionFinderStart                    
