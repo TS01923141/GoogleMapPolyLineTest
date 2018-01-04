@@ -7,8 +7,8 @@ First entry origin and destination, after click button. app will mark start&amp;
         check Permission
     sendRequestTest: or sendRequest:
         取得起訖點 or 取得輸入的起訖點
-        get start&end position or get start&end position by editText
-    directionFinder.execute:
+        get start&end position or get start&end position by editText
+    directionFinder.execute:
         執行onDirectionFinderStart
         excute onDirectionFinderStart and fetchData
     onDirectionFinderStart:
