@@ -2,11 +2,13 @@
 First entry origin and destination, after click button. app will mark start&amp;end position and draw path.
 
 ## 執行流程 ##
-    onMapReady:檢查權限
+    onMapReady:
+        檢查權限
         check Permission
-    sendRequestTest:取得起訖點 or sendRequest:取得輸入的起訖點
-        get start&end position
-    directionFinder.execute:執行onDirectionFinderStart
+    sendRequestTest: or sendRequest:
+        取得起訖點 or 取得輸入的起訖點
+        get start&end position or get start&end position by editText
+    directionFinder.execute:執行onDirectionFinderStart
         excute onDirectionFinderStart and fetchData
     onDirectionFinderStart:檢查是否有舊的線，有的話刪除
         delete old mark and polyLine
